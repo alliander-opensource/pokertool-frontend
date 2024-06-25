@@ -1,6 +1,7 @@
 <main>
   <app-table
-    (buttonPressed)="revealConceal()"
+    (revealButtonPressed)="revealConceal()"
+    (resetButtonPressed)="reset()"
     [playedCards]="state.playedCards"
     [numPlayers]="state.numPlayers"
     [host]="state.host"

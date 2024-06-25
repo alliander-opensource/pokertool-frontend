@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CardComponent} from "../card/card.component";
-import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-table',
@@ -14,7 +13,8 @@ import {Subject} from "rxjs";
 export class TableComponent {
   @Input() playedCards: number[] = [];
   @Input() revealed = false;
-  @Output() buttonPressed = new EventEmitter<void>();
+  @Output() revealButtonPressed = new EventEmitter<void>();
+  @Output() resetButtonPressed = new EventEmitter<void>();
   @Input() host = true;
   @Input() numPlayers = 0;
 

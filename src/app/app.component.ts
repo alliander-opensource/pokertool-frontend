@@ -85,4 +85,8 @@ export class AppComponent implements OnInit {
       this.api.conceal(this.roomId!!).subscribe(_ => this.updateState());
     }
   }
+
+  reset() {
+    this.api.reset(this.roomId).subscribe(_ => this.updateState());
+  }
 }

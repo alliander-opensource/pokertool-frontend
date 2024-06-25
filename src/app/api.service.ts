@@ -41,4 +41,8 @@ export class ApiService {
     let userId = this.userService.getUser();
     return this.http.put(`${this.URL}/rooms/${roomId}/users/${userId}`, `${card}`, {responseType: 'text'});
   }
+
+  public reset(roomId: string): Observable<string> {
+    return this.http.post(`${this.URL}/rooms/${roomId}/reset`, '', {responseType: 'text'});
+  }
 }
