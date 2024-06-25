@@ -3,12 +3,12 @@
     @for (_ of Array(numPlayers); track $index) {
       <div class="slot">
         @if ($index < playedCards.length) {
-          <app-card [value]="playedCards[$index]" [turn]="!revealed && $index != myIndex" />
+          <app-card [value]="playedCards[$index]" [turn]="!revealed" />
         }
       </div>
     }
   </div>
   @if (host) {
-    <button (click)="revealed = !revealed" class="button">@if (revealed) { Hide } @else { Reveal }</button>
+    <button (click)="buttonPressed.emit()" class="button">@if (revealed) { Hide } @else { Reveal }</button>
   }
 </div>

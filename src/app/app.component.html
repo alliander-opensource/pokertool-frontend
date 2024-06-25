@@ -1,6 +1,11 @@
 <main>
-  <app-table [numPlayers]="numPlayers" [playedCards]="playedCards" [myIndex]="myIndex" [(revealed)]="revealed" [host]="host"/>
-  <app-hand (cardSelected)="playCard($event)"/>
+  <app-table
+    (buttonPressed)="revealConceal()"
+    [playedCards]="state.playedCards"
+    [numPlayers]="state.numPlayers"
+    [host]="state.host"
+    [revealed]="state.revealed"/>
+  <app-hand (cardChange)="playCard($event)"/>
 </main>
 
 <router-outlet/>
