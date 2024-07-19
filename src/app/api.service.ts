@@ -4,7 +4,7 @@ import {v4 as uuidv4} from 'uuid';
 import {UserService} from "./user.service";
 import {Observable} from "rxjs";
 import {Room} from "./room";
-import {environment} from "../environment/environment";
+import {environment} from "../environments/environment";
 
 @Injectable({
   providedIn: 'root'
