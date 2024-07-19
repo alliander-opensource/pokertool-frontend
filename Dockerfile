@@ -13,7 +13,7 @@ RUN npm install -g @angular/cli
 
 RUN ng build --output-path dist
 
-FROM nginx:alpine
+FROM nginx:alpine-slim
 
 COPY --from=build /app/dist/browser /usr/share/nginx/html
 
