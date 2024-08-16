@@ -9,5 +9,5 @@ import {Component, Input} from '@angular/core';
 })
 export class ThrobberComponent {
   @Input() color = 'white';
-  @Input() size = '24pt';
+  @Input() size = 24;
 }

@@ -26,6 +26,8 @@ export class AppComponent implements OnInit {
 
   /// Indicates that the client sent a state-altering request to the server and is currently waiting for the state to update.
   synchronizing = false;
+  /// Indicates that the client hasn't received state from the server yet.
+  connecting = true;
 
   roomId!: string;
 
@@ -66,6 +68,7 @@ export class AppComponent implements OnInit {
           this.state.numPlayers = room.users.length;
           this.state.host = room.hostUserId === this.userService.getUser();
           this.state.revealed = room.revealed;
+          this.connecting = false;
           if(changeRequested) this.synchronizing = false;
         }
       );

@@ -1,5 +1,9 @@
 <main>
   <div class="slots">
+    @if (connecting) {
+      <app-throbber color="#00000040" [size]="128"/>
+    }
+
     @for (_ of Array(state.numPlayers); track $index) {
       <div class="slot">
         @if ($index < state.playedCards.length) {
@@ -11,17 +15,17 @@
 
   @if (state.host) {
     <div class="button-bar">
-      <app-button (click)="revealConceal()" [disabled]="synchronizing">
+      <app-button (click)="revealConceal()" [disabled]="synchronizing || connecting">
         @if (state.revealed) { Hide } @else { Reveal }
       </app-button>
-      <app-button (click)="reset()" [disabled]="synchronizing">
+      <app-button (click)="reset()" [disabled]="synchronizing || connecting">
         Reset
       </app-button>
     </div>
   }
 
-  <div class="hand" [class.hide]="state.revealed">
-    <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing"/>
+  <div class="hand" [class.hide]="state.revealed || connecting">
+    <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing || connecting"/>
   </div>
 </main>
 
