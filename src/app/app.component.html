@@ -1,13 +1,28 @@
 <main>
-  <app-table
-    (revealButtonPressed)="revealConceal()"
-    (resetButtonPressed)="reset()"
-    [playedCards]="state.playedCards"
-    [numPlayers]="state.numPlayers"
-    [host]="state.host"
-    [revealed]="state.revealed"
-    [inputDisabled]="synchronizing"/>
-  <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing || state.revealed"/>
+  <div class="slots">
+    @for (_ of Array(state.numPlayers); track $index) {
+      <div class="slot">
+        @if ($index < state.playedCards.length) {
+          <app-card [value]="state.playedCards[$index]" [turn]="!state.revealed" />
+        }
+      </div>
+    }
+  </div>
+
+  @if (state.host) {
+    <div class="button-bar">
+      <app-button (click)="revealConceal()" [disabled]="synchronizing">
+        @if (state.revealed) { Hide } @else { Reveal }
+      </app-button>
+      <app-button (click)="reset()" [disabled]="synchronizing">
+        Reset
+      </app-button>
+    </div>
+  }
+
+  <div class="hand" [class.hide]="state.revealed">
+    <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing"/>
+  </div>
 </main>
 
 <router-outlet/>

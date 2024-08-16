@@ -1,4 +1,4 @@
-<div [class]="raise ? 'raise card' : turn ? 'turn card' : 'card'" [style.transform]="transform">
+<div class="card" [class.raise]="raise" [class.turn]="turn" [style.transform]="transform">
   <div class="card-front">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16">
       <text x="1" y="2.5" class="card-text" textLength="1" lengthAdjust="spacingAndGlyphs">{{ value }}</text>

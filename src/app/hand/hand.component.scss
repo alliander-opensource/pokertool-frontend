@@ -1,14 +1,8 @@
 .hand {
   position: absolute;
-  bottom: 0;
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: flex-end;
   gap: -1em;
-  transform: translateY(0);
-  transition: transform 0.1s ease-in;
-}
-
-.disabled {
-  transform: translateY(100%);
 }

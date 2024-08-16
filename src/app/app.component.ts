@@ -1,17 +1,18 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {HandComponent} from "./hand/hand.component";
-import {TableComponent} from "./table/table.component";
 import {ApiService} from "./api.service";
 import {State} from "./state";
 import {debounceTime, filter, forkJoin, interval, map, merge, mergeMap, Observable, Subject, tap} from "rxjs";
 import {UserService} from "./user.service";
 import {ThrobberComponent} from "./throbber/throbber.component";
+import {ButtonComponent} from "./button/button.component";
+import {CardComponent} from "./card/card.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HandComponent, TableComponent, ThrobberComponent],
+  imports: [RouterOutlet, HandComponent, ThrobberComponent, ButtonComponent, CardComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -96,4 +97,6 @@ export class AppComponent implements OnInit {
     this.synchronizing = true;
     this.api.reset(this.roomId).subscribe(_ => this.updateState(true));
   }
+
+  protected readonly Array = Array;
 }
