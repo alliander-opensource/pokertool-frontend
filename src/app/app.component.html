@@ -25,7 +25,7 @@
   }
 
   <div class="hand" [class.hide]="state.revealed || connecting">
-    <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing || connecting"/>
+    <app-hand (cardChange)="playCard($event)" [disabled]="state.revealed || synchronizing || connecting"/>
   </div>
 </main>
 
