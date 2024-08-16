@@ -10,8 +10,12 @@
   </div>
   @if (host) {
     <div class="button-bar">
-      <button (click)="revealButtonPressed.emit()" class="button">@if (revealed) { Hide } @else { Reveal }</button>
-      <button (click)="resetButtonPressed.emit()" class="button">Reset</button>
+      <app-button (click)="revealButtonPressed.emit()" [disabled]="inputDisabled">
+        @if (revealed) { Hide } @else { Reveal }
+      </app-button>
+      <app-button (click)="resetButtonPressed.emit()" [disabled]="inputDisabled">
+        Reset
+      </app-button>
     </div>
   }
 </div>

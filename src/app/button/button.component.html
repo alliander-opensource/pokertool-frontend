@@ -1,0 +1,7 @@
+<button class="button" (click)="click.emit()" [disabled]="disabled">
+  @if (disabled) {
+    <app-throbber color="#26211f" size="16pt"/>
+  } @else {
+    <ng-content/>
+  }
+</button>

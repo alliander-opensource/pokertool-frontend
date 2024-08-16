@@ -5,8 +5,9 @@
     [playedCards]="state.playedCards"
     [numPlayers]="state.numPlayers"
     [host]="state.host"
-    [revealed]="state.revealed"/>
-  <app-hand (cardChange)="playCard($event)"/>
+    [revealed]="state.revealed"
+    [inputDisabled]="synchronizing"/>
+  <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing || state.revealed"/>
 </main>
 
 <router-outlet/>

@@ -6,11 +6,12 @@ import {ApiService} from "./api.service";
 import {State} from "./state";
 import {debounceTime, filter, forkJoin, interval, map, merge, mergeMap, Observable, Subject, tap} from "rxjs";
 import {UserService} from "./user.service";
+import {ThrobberComponent} from "./throbber/throbber.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HandComponent, TableComponent],
+  imports: [RouterOutlet, HandComponent, TableComponent, ThrobberComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -21,6 +22,9 @@ export class AppComponent implements OnInit {
     host: false,
     revealed: false,
   };
+
+  /// Indicates that the client sent a state-altering request to the server and is currently waiting for the state to update.
+  synchronizing = false;
 
   roomId!: string;
 
@@ -49,10 +53,10 @@ export class AppComponent implements OnInit {
   }
 
   startUpdateCycle() {
-    interval(1000).subscribe(_ => this.updateState())
+    interval(3000).subscribe(_ => this.updateState(false))
   }
 
-  updateState() {
+  updateState(changeRequested: boolean) {
     this.api.getRoom(this.roomId!!)
       .subscribe(
         room => {
@@ -61,6 +65,7 @@ export class AppComponent implements OnInit {
           this.state.numPlayers = room.users.length;
           this.state.host = room.hostUserId === this.userService.getUser();
           this.state.revealed = room.revealed;
+          if(changeRequested) this.synchronizing = false;
         }
       );
   }
@@ -74,19 +79,21 @@ export class AppComponent implements OnInit {
   }
 
   playCard(card: number) {
-    this.api.submitCard(this.roomId, card).subscribe(_ => this.updateState());
+    this.synchronizing = true;
+    this.api.submitCard(this.roomId, card).subscribe(_ => this.updateState(true));
   }
 
   revealConceal() {
-    this.state.revealed = !this.state.revealed;
+    this.synchronizing = true;
     if (this.state.revealed) {
-      this.api.reveal(this.roomId!!).subscribe(_ => this.updateState());
+      this.api.conceal(this.roomId!!).subscribe(_ => this.updateState(true));
     } else {
-      this.api.conceal(this.roomId!!).subscribe(_ => this.updateState());
+      this.api.reveal(this.roomId!!).subscribe(_ => this.updateState(true));
     }
   }
 
   reset() {
-    this.api.reset(this.roomId).subscribe(_ => this.updateState());
+    this.synchronizing = true;
+    this.api.reset(this.roomId).subscribe(_ => this.updateState(true));
   }
 }
