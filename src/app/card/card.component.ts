@@ -11,7 +11,8 @@ import {Placement} from "../placement";
 export class CardComponent {
   @Input() value: number = 0;
   @Input() raise: boolean = false;
-  @Input() turn: boolean = false;
+  @Input() flipped: boolean = false;
+  @Input() disabled: boolean = false;
   @Input() transform: string = '';
 
   getPlacements = (value: number) => {

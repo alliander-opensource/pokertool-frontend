@@ -7,7 +7,7 @@
     @for (_ of Array(state.numPlayers); track $index) {
       <div class="slot">
         @if ($index < state.playedCards.length) {
-          <app-card [value]="state.playedCards[$index]" [turn]="!state.revealed" />
+          <app-card [value]="state.playedCards[$index]" [flipped]="!state.revealed" />
         }
       </div>
     }
@@ -25,7 +25,7 @@
   }
 
   <div class="hand" [class.hide]="state.revealed || connecting">
-    <app-hand (cardChange)="playCard($event)" [disabled]="state.revealed || synchronizing || connecting"/>
+    <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing || connecting" [flipped]="state.revealed || connecting"/>
   </div>
 </main>
 

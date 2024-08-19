@@ -1,5 +1,5 @@
-<div class="hand" [class.disabled]="disabled">
+<div class="hand">
   @for (value of values; track value) {
-    <app-card (click)="disabled ? {} : selectCard(value)" [turn]="disabled" [value]="value" [raise]="true" transform="rotate({{ ($index - values.length / 2 + 0.5) * 7 }}deg) translateY({{ Math.pow(Math.abs(($index - values.length / 2 + 0.5)), 1.7) }}em)" />
+    <app-card (click)="disabled ? {} : selectCard(value)" [disabled]="disabled" [flipped]="flipped" [value]="value" [raise]="true" transform="rotate({{ ($index - values.length / 2 + 0.5) * 7 }}deg) translateY({{ Math.pow(Math.abs(($index - values.length / 2 + 0.5)), 1.7) }}em)" />
   }
 </div>

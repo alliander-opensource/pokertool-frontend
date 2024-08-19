@@ -12,6 +12,7 @@ import {CardComponent} from "../card/card.component";
 })
 export class HandComponent {
   @Input() disabled = false;
+  @Input() flipped = false;
 
   @Output() cardChange = new EventEmitter<number>();
 
