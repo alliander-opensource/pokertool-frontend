@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
         room => {
           // @ts-ignore
           this.state.playedCards = room.users.map(user => this.responseToCard(user.card)).filter(value => value !== null);
-          this.state.numPlayers = room.users.length;
+          this.state.numPlayers = room.users.length + 10;
           this.state.host = room.hostUserId === this.userService.getUser();
           this.state.revealed = room.revealed;
           this.connecting = false;

@@ -1,8 +1,6 @@
 .hand {
-  position: absolute;
-  width: 100%;
   display: flex;
+  padding-top: 1em;
   justify-content: center;
-  align-items: flex-end;
-  gap: -1em;
+  overflow: hidden;
 }

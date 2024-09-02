@@ -13,5 +13,5 @@ import {ThrobberComponent} from "../throbber/throbber.component";
 export class ButtonComponent {
   @Input() disabled = false;
 
-  @Output() click = new EventEmitter<void>();
+  @Output() onClick = new EventEmitter<void>();
 }

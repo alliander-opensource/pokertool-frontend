@@ -12,15 +12,17 @@ import {CardComponent} from "../card/card.component";
 })
 export class HandComponent {
   @Input() disabled = false;
-  @Input() flipped = false;
+  @Input() hidden = false;
 
   @Output() cardChange = new EventEmitter<number>();
 
-  values = [0, 1, 2, 3, 5, 8, 13, 21];
+  values = [0, 1, 2, 3, 5, 8, 13];
 
   protected readonly Math = Math;
 
   selectCard(card: number) {
-    this.cardChange.emit(card);
+    if(!this.disabled) {
+      this.cardChange.emit(card);
+    }
   }
 }

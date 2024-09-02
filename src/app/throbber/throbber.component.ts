@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-throbber',
@@ -7,7 +7,4 @@ import {Component, Input} from '@angular/core';
   templateUrl: './throbber.component.html',
   styleUrl: './throbber.component.scss'
 })
-export class ThrobberComponent {
-  @Input() color = 'white';
-  @Input() size = 24;
-}
+export class ThrobberComponent {}
