@@ -4,3 +4,33 @@
   justify-content: center;
   overflow: hidden;
 }
+
+$numCards: 7;
+
+app-card {
+  transition: transform 0.1s ease-in;
+}
+
+@for $i from 1 through $numCards {
+  $offset: $i - $numCards / 2 - 0.5;
+
+  app-card:nth-child(#{$i}) {
+    transform: rotate(#{7 * $offset}deg) translateX(#{-6 * $offset}em) translateY(#{pow($offset, 2)}em);
+  }
+
+  app-card:hover:nth-child(#{$i}) {
+    transform: rotate(0deg) translateX(#{-6 * $offset}em) translateY(-1em);
+    z-index: 1;
+  }
+
+  @media (min-width: 768px) {
+    app-card:nth-child(#{$i}) {
+      transform: rotate(#{7 * $offset}deg) translateX(#{-1.8 * $offset}em) translateY(#{pow($offset, 2)}em);
+    }
+
+    app-card:hover:nth-child(#{$i}) {
+      transform: rotate(0deg) translateX(#{-1.8 * $offset}em) translateY(-1em);
+      z-index: 1;
+    }
+  }
+}

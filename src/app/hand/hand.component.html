@@ -4,8 +4,6 @@
       (click)="selectCard(value)"
       [disabled]="disabled"
       [flipped]="hidden"
-      [value]="value"
-      [raise]="true"
-      transform="rotate({{ ($index - values.length / 2 + 0.5) * 7 }}deg) translateY({{ Math.pow(Math.abs(($index - values.length / 2 + 0.5)), 1.7) }}em)" />
+      [value]="value" />
   }
 </div>
