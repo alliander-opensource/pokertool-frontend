@@ -8,7 +8,7 @@
       @for (_ of Array(state.numPlayers); track $index) {
         <div class="slot">
           @if ($index < state.playedCards.length) {
-            <app-card [value]="state.playedCards[$index]" [flipped]="!state.revealed" />
+            <app-card [value]="state.playedCards[$index]" [flipped]="!(state.revealed || state.playedBy[$index] == userService.getUser())" />
           }
         </div>
       }

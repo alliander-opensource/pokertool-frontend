@@ -3,7 +3,7 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {HandComponent} from "./hand/hand.component";
 import {ApiService} from "./api.service";
 import {State} from "./state";
-import {debounceTime, filter, forkJoin, interval, map, merge, mergeMap, Observable, Subject, tap} from "rxjs";
+import {debounceTime, interval} from "rxjs";
 import {UserService} from "./user.service";
 import {ThrobberComponent} from "./throbber/throbber.component";
 import {ButtonComponent} from "./button/button.component";
@@ -19,6 +19,7 @@ import {CardComponent} from "./card/card.component";
 export class AppComponent implements OnInit {
   state: State = {
     playedCards: [],
+    playedBy: [],
     numPlayers: 0,
     host: false,
     revealed: false,
@@ -31,7 +32,7 @@ export class AppComponent implements OnInit {
 
   roomId!: string;
 
-  constructor(private api: ApiService, private userService: UserService, private route: ActivatedRoute, private router: Router) {
+  constructor(private api: ApiService, protected userService: UserService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
@@ -65,6 +66,7 @@ export class AppComponent implements OnInit {
         room => {
           // @ts-ignore
           this.state.playedCards = room.users.map(user => this.responseToCard(user.card)).filter(value => value !== null);
+          this.state.playedBy = room.users.map(user => user.userId);
           this.state.numPlayers = room.users.length;
           this.state.host = room.hostUserId === this.userService.getUser();
           this.state.revealed = room.revealed;
