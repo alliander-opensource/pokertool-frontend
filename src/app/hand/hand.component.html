@@ -2,8 +2,8 @@
   @for (value of values; track value) {
     <app-card
       (click)="selectCard(value)"
-      [disabled]="disabled"
-      [flipped]="hidden"
+      [disabled]="disabled()"
+      [flipped]="hidden()"
       [value]="value" />
   }
 </div>

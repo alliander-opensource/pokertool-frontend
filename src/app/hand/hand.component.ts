@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, input, output} from '@angular/core';
 import {CardComponent} from "../card/card.component";
 
 @Component({
@@ -11,17 +11,15 @@ import {CardComponent} from "../card/card.component";
   styleUrl: './hand.component.scss'
 })
 export class HandComponent {
-  @Input() disabled = false;
-  @Input() hidden = false;
+  disabled = input(false);
+  hidden = input(false);
 
-  @Output() cardChange = new EventEmitter<number>();
+  cardChange = output<number>()
 
   values = [0, 1, 2, 3, 5, 8, 13];
 
-  protected readonly Math = Math;
-
   selectCard(card: number) {
-    if(!this.disabled) {
+    if(!this.disabled()) {
       this.cardChange.emit(card);
     }
   }

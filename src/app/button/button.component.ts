@@ -1,17 +1,14 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ThrobberComponent} from "../throbber/throbber.component";
+import {Component, input, output} from '@angular/core';
 
 @Component({
   selector: 'app-button',
   standalone: true,
-    imports: [
-        ThrobberComponent
-    ],
+  imports: [],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss'
 })
 export class ButtonComponent {
-  @Input() disabled = false;
+  disabled = input(false);
 
-  @Output() onClick = new EventEmitter<void>();
+  onClick = output();
 }

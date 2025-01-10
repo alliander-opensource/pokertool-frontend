@@ -5,6 +5,7 @@ import {UserService} from "./user.service";
 import {Observable} from "rxjs";
 import {Room} from "./room";
 import {environment} from "../environments/environment";
+import {webSocket} from "rxjs/webSocket";
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +20,8 @@ export class ApiService {
     return this.http.post(`${environment.backendUrl}/rooms/${roomId}`, userId, {responseType: 'text'});
   }
 
-  public registerUser(roomId: string): Observable<string> {
-    let userId = this.userService.getUser();
-    return this.http.post(`${environment.backendUrl}/rooms/${roomId}/users/${userId}`, '', {responseType: 'text'});
-  }
-
   public getRoom(roomId: string): Observable<Room> {
-    return this.http.get<Room>(`${environment.backendUrl}/rooms/${roomId}`);
+    return webSocket<Room>(`${environment.backendUrl}/rooms/${roomId}/ws`).asObservable()
   }
 
   public reveal(roomId: string): Observable<string> {
@@ -36,9 +32,9 @@ export class ApiService {
     return this.http.post(`${environment.backendUrl}/rooms/${roomId}/conceal`, '', {responseType: 'text'});
   }
 
-  public submitCard(roomId: string, card: number): Observable<string> {
+  public submitCard(roomId: string, card?: number): Observable<string> {
     let userId = this.userService.getUser();
-    return this.http.put(`${environment.backendUrl}/rooms/${roomId}/users/${userId}`, `${card}`, {responseType: 'text'});
+    return this.http.post(`${environment.backendUrl}/rooms/${roomId}/users/${userId}`, card == undefined ? null : `${card}`, {responseType: 'text'});
   }
 
   public reset(roomId: string): Observable<string> {
