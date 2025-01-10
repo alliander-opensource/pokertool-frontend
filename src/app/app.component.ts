@@ -2,7 +2,7 @@ import {Component, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {HandComponent} from "./hand/hand.component";
 import {ApiService} from "./api.service";
-import {CardState, State} from "./state";
+import {CardState} from "./state";
 import {debounceTime} from "rxjs";
 import {UserService} from "./user.service";
 import {ThrobberComponent} from "./throbber/throbber.component";
@@ -18,13 +18,9 @@ import {User} from "./user";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  // TODO use signal for state
-  state: State = {
-    cards: [],
-    host: false,
-    revealed: false,
-  };
-
+  cards = signal<CardState[]>([]);
+  host = signal(false);
+  revealed = signal(false);
   spectating = signal(false);
   /// Indicates that the client sent a state-altering request to the server and is currently waiting for the state to update.
   synchronizing = signal(false);
@@ -74,10 +70,10 @@ export class AppComponent implements OnInit {
       .subscribe({
         next:
           room => {
-            this.state.cards = room.users.map(user => this.responseToCard(user))
-            this.state.host = room.hostUserId === this.userService.getUser();
-            this.state.revealed = room.revealed;
-            this.connecting.set(false);
+            this.cards.set(room.users.map(user => this.responseToCard(user)))
+            this.host.set(room.hostUserId === this.userService.getUser())
+            this.revealed.set(room.revealed)
+            this.connecting.set(false)
           },
         error: _ => this.connecting.set(true),
         complete: () => this.connecting.set(true),
@@ -100,7 +96,7 @@ export class AppComponent implements OnInit {
 
   revealConceal() {
     this.synchronizing.set(true);
-    if (this.state.revealed) {
+    if (this.revealed()) {
       this.api.conceal(this.roomId!!)
         .subscribe(() => this.synchronizing.set(false));
     } else {
@@ -124,6 +120,4 @@ export class AppComponent implements OnInit {
     this.api.deleteCard(this.roomId)
       .subscribe(() => this.spectating.set(true))
   }
-
-  protected readonly Array = Array;
 }

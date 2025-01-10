@@ -6,10 +6,10 @@
   } @else {
     <div class="slots">
       <!-- TODO fix tracking -->
-      @for (card of state.cards; track card.userId) {
+      @for (card of cards(); track card.userId) {
         <div class="slot">
           @if(card.value != null) {
-            <app-card [value]="card.value" [flipped]="!(state.revealed || card.userId == userService.getUser())" />
+            <app-card [value]="card.value" [flipped]="!(revealed() || card.userId == userService.getUser())" />
           }
         </div>
       }
@@ -17,9 +17,9 @@
 
 
     <div class="button-bar">
-      @if (state.host) {
+      @if (host()) {
         <app-button (onClick)="revealConceal()" [disabled]="synchronizing() || connecting()">
-          @if (state.revealed) { Hide } @else { Reveal }
+          @if (revealed()) { Hide } @else { Reveal }
         </app-button>
         <app-button (onClick)="reset()" [disabled]="synchronizing() || connecting()">
           Reset
@@ -36,8 +36,8 @@
       }
     </div>
 
-    <div class="hand" [class.hidden]="state.revealed || connecting() || spectating()">
-      <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing() || state.revealed || connecting()" [hidden]="state.revealed || connecting()"/>
+    <div class="hand" [class.hidden]="revealed() || connecting() || spectating()">
+      <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing() || revealed() || connecting()" [hidden]="revealed() || connecting()"/>
     </div>
   }
 </main>
