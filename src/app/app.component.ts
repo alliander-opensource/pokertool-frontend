@@ -18,6 +18,7 @@ import {User} from "./user";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+  // TODO use signal for state
   state: State = {
     cards: [],
     host: false,
