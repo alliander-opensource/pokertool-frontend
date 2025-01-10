@@ -3,7 +3,7 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {HandComponent} from "./hand/hand.component";
 import {ApiService} from "./api.service";
 import {State} from "./state";
-import {debounceTime, interval} from "rxjs";
+import {debounceTime} from "rxjs";
 import {UserService} from "./user.service";
 import {ThrobberComponent} from "./throbber/throbber.component";
 import {ButtonComponent} from "./button/button.component";
@@ -57,23 +57,22 @@ export class AppComponent implements OnInit {
   }
 
   startUpdateCycle() {
-    interval(3000).subscribe(_ => this.updateState(false))
-  }
-
-  updateState(changeRequested: boolean) {
     this.api.getRoom(this.roomId!!)
-      .subscribe(
-        room => {
-          // @ts-ignore
-          this.state.playedCards = room.users.map(user => this.responseToCard(user.card)).filter(value => value !== null);
-          this.state.playedBy = room.users.map(user => user.userId);
-          this.state.numPlayers = room.users.length;
-          this.state.host = room.hostUserId === this.userService.getUser();
-          this.state.revealed = room.revealed;
-          this.connecting = false;
-          if(changeRequested) this.synchronizing = false;
-        }
-      );
+      .subscribe({
+        next:
+          room => {
+            // @ts-ignore
+            this.state.playedCards = room.users.map(user => this.responseToCard(user.card)).filter(value => value !== null);
+            this.state.playedBy = room.users.map(user => user.userId);
+            this.state.numPlayers = room.users.length;
+            this.state.host = room.hostUserId === this.userService.getUser();
+            this.state.revealed = room.revealed;
+            this.connecting = false;
+            this.synchronizing = false;
+          },
+        error: _ => this.connecting = true,
+        complete: () => this.connecting = true,
+      });
   }
 
   responseToCard(card: string): number | null {
@@ -86,21 +85,21 @@ export class AppComponent implements OnInit {
 
   playCard(card: number) {
     this.synchronizing = true;
-    this.api.submitCard(this.roomId, card).subscribe(_ => this.updateState(true));
+    this.api.submitCard(this.roomId, card).subscribe();
   }
 
   revealConceal() {
     this.synchronizing = true;
     if (this.state.revealed) {
-      this.api.conceal(this.roomId!!).subscribe(_ => this.updateState(true));
+      this.api.conceal(this.roomId!!).subscribe();
     } else {
-      this.api.reveal(this.roomId!!).subscribe(_ => this.updateState(true));
+      this.api.reveal(this.roomId!!).subscribe();
     }
   }
 
   reset() {
     this.synchronizing = true;
-    this.api.reset(this.roomId).subscribe(_ => this.updateState(true));
+    this.api.reset(this.roomId).subscribe();
   }
 
   protected readonly Array = Array;

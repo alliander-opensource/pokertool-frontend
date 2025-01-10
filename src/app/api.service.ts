@@ -5,6 +5,7 @@ import {UserService} from "./user.service";
 import {Observable} from "rxjs";
 import {Room} from "./room";
 import {environment} from "../environments/environment";
+import {webSocket} from "rxjs/webSocket";
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class ApiService {
   }
 
   public getRoom(roomId: string): Observable<Room> {
-    return this.http.get<Room>(`${environment.backendUrl}/rooms/${roomId}`);
+    return webSocket<Room>(`${environment.backendUrl}/rooms/${roomId}/ws`).asObservable()
   }
 
   public reveal(roomId: string): Observable<string> {
