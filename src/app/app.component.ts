@@ -71,7 +71,6 @@ export class AppComponent implements OnInit {
             this.state.host = room.hostUserId === this.userService.getUser();
             this.state.revealed = room.revealed;
             this.connecting = false;
-            this.synchronizing = false;
           },
         error: _ => this.connecting = true,
         complete: () => this.connecting = true,
@@ -88,21 +87,25 @@ export class AppComponent implements OnInit {
 
   playCard(card: number) {
     this.synchronizing = true;
-    this.api.submitCard(this.roomId, card).subscribe();
+    this.api.submitCard(this.roomId, card)
+      .subscribe(() => this.synchronizing = false);
   }
 
   revealConceal() {
     this.synchronizing = true;
     if (this.state.revealed) {
-      this.api.conceal(this.roomId!!).subscribe();
+      this.api.conceal(this.roomId!!)
+        .subscribe(() => this.synchronizing = false);
     } else {
-      this.api.reveal(this.roomId!!).subscribe();
+      this.api.reveal(this.roomId!!)
+        .subscribe(() => this.synchronizing = false);
     }
   }
 
   reset() {
     this.synchronizing = true;
-    this.api.reset(this.roomId).subscribe();
+    this.api.reset(this.roomId)
+      .subscribe(() => this.synchronizing = false);
   }
 
   protected readonly Array = Array;
