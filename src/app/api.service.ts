@@ -20,11 +20,6 @@ export class ApiService {
     return this.http.post(`${environment.backendUrl}/rooms/${roomId}`, userId, {responseType: 'text'});
   }
 
-  public registerUser(roomId: string): Observable<string> {
-    let userId = this.userService.getUser();
-    return this.http.post(`${environment.backendUrl}/rooms/${roomId}/users/${userId}`, '', {responseType: 'text'});
-  }
-
   public getRoom(roomId: string): Observable<Room> {
     return webSocket<Room>(`${environment.backendUrl}/rooms/${roomId}/ws`).asObservable()
   }
@@ -37,9 +32,9 @@ export class ApiService {
     return this.http.post(`${environment.backendUrl}/rooms/${roomId}/conceal`, '', {responseType: 'text'});
   }
 
-  public submitCard(roomId: string, card: number): Observable<string> {
+  public submitCard(roomId: string, card?: number): Observable<string> {
     let userId = this.userService.getUser();
-    return this.http.put(`${environment.backendUrl}/rooms/${roomId}/users/${userId}`, `${card}`, {responseType: 'text'});
+    return this.http.post(`${environment.backendUrl}/rooms/${roomId}/users/${userId}`, card ? `${card}` : null, {responseType: 'text'});
   }
 
   public reset(roomId: string): Observable<string> {

@@ -32,7 +32,10 @@ export class AppComponent implements OnInit {
 
   roomId!: string;
 
-  constructor(private api: ApiService, protected userService: UserService, private route: ActivatedRoute, private router: Router) {
+  constructor(protected userService: UserService,
+              private api: ApiService,
+              private route: ActivatedRoute,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -42,8 +45,8 @@ export class AppComponent implements OnInit {
         if (roomId !== null) {
           this.roomId = roomId;
           console.log(`joining room ${this.roomId}`);
-          return this.api.registerUser(this.roomId)
-            .subscribe({next: _ => this.startUpdateCycle(), error: _ => this.startUpdateCycle()});
+          return this.api.submitCard(this.roomId)
+            .subscribe({next: _ => this.startUpdateCycle()});
         } else {
           console.log('not in a room, creating one');
           return this.api.createRoom()
