@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
   }
 
   startUpdateCycle() {
-    this.api.getRoom(this.roomId!!)
+    this.api.getRoom(this.roomId!!, this.userService.getUser())
       .subscribe({
         next:
           room => {

@@ -20,8 +20,8 @@ export class ApiService {
     return this.http.post(`${environment.backendUrl}/rooms/${roomId}`, userId, {responseType: 'text'});
   }
 
-  public getRoom(roomId: string): Observable<Room> {
-    return webSocket<Room>(`${environment.backendUrl}/rooms/${roomId}/ws`).asObservable()
+  public getRoom(roomId: string, userId: string): Observable<Room> {
+    return webSocket<Room>(`${environment.backendUrl}/rooms/${roomId}/${userId}/ws`).asObservable()
   }
 
   public reveal(roomId: string): Observable<string> {
