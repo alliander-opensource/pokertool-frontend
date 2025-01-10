@@ -5,7 +5,6 @@
     </div>
   } @else {
     <div class="slots">
-      <!-- TODO fix tracking -->
       @for (card of cards(); track card.userId) {
         <div class="slot">
           @if(card.value != null) {
