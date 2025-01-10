@@ -6,10 +6,10 @@
   } @else {
     <div class="slots">
       <!-- TODO fix tracking -->
-      @for (_ of Array(state.numPlayers); track $index) {
+      @for (card of state.cards; track card.userId) {
         <div class="slot">
-          @if ($index < state.playedCards.length) {
-            <app-card [value]="state.playedCards[$index]" [flipped]="!(state.revealed || state.playedBy[$index] == userService.getUser())" />
+          @if(card.value != null) {
+            <app-card [value]="card.value" [flipped]="!(state.revealed || card.userId == userService.getUser())" />
           }
         </div>
       }

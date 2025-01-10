@@ -2,12 +2,13 @@ import {Component, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {HandComponent} from "./hand/hand.component";
 import {ApiService} from "./api.service";
-import {State} from "./state";
+import {CardState, State} from "./state";
 import {debounceTime} from "rxjs";
 import {UserService} from "./user.service";
 import {ThrobberComponent} from "./throbber/throbber.component";
 import {ButtonComponent} from "./button/button.component";
 import {CardComponent} from "./card/card.component";
+import {User} from "./user";
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,7 @@ import {CardComponent} from "./card/card.component";
 })
 export class AppComponent implements OnInit {
   state: State = {
-    playedCards: [],
-    playedBy: [],
-    numPlayers: 0,
+    cards: [],
     host: false,
     revealed: false,
   };
@@ -74,10 +73,7 @@ export class AppComponent implements OnInit {
       .subscribe({
         next:
           room => {
-            // @ts-ignore
-            this.state.playedCards = room.users.map(user => this.responseToCard(user.card)).filter(value => value !== null);
-            this.state.playedBy = room.users.map(user => user.userId);
-            this.state.numPlayers = room.users.length;
+            this.state.cards = room.users.map(user => this.responseToCard(user))
             this.state.host = room.hostUserId === this.userService.getUser();
             this.state.revealed = room.revealed;
             this.connecting.set(false);
@@ -87,11 +83,11 @@ export class AppComponent implements OnInit {
       });
   }
 
-  responseToCard(card: string): number | null {
-    if (card === '') {
-      return null;
+  responseToCard(user: User): CardState {
+    if (user.card === '') {
+      return {userId: user.userId, value: null};
     } else {
-      return +card;
+      return {userId: user.userId, value: +user.card};
     }
   }
 

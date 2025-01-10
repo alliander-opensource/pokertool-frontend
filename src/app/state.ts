@@ -1,7 +1,10 @@
 export interface State {
-  playedCards: number[],
-  playedBy: string[],
-  numPlayers: number,
+  cards: CardState[],
   host: boolean,
   revealed: boolean,
+}
+
+export interface CardState {
+  userId: string;
+  value: number | null ;
 }
