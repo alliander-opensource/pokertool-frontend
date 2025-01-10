@@ -12,7 +12,7 @@ app-card {
 }
 
 @for $i from 1 through $numCards {
-  $offset: $i - $numCards / 2 - 0.5;
+  $offset: calc($i - $numCards / 2 - 0.5);
 
   app-card:nth-child(#{$i}) {
     transform: rotate(#{7 * $offset}deg) translateX(#{-6 * $offset}em) translateY(#{pow($offset, 2)}em);
