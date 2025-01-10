@@ -17,9 +17,6 @@ import {CardComponent} from "./card/card.component";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-
-  spectating = signal<boolean>(false);
-
   state: State = {
     playedCards: [],
     playedBy: [],
@@ -28,10 +25,11 @@ export class AppComponent implements OnInit {
     revealed: false,
   };
 
+  spectating = signal(false);
   /// Indicates that the client sent a state-altering request to the server and is currently waiting for the state to update.
-  synchronizing = false;
+  synchronizing = signal(false);
   /// Indicates that the client hasn't received state from the server yet.
-  connecting = true;
+  connecting = signal(true);
 
   roomId!: string;
 
@@ -82,10 +80,10 @@ export class AppComponent implements OnInit {
             this.state.numPlayers = room.users.length;
             this.state.host = room.hostUserId === this.userService.getUser();
             this.state.revealed = room.revealed;
-            this.connecting = false;
+            this.connecting.set(false);
           },
-        error: _ => this.connecting = true,
-        complete: () => this.connecting = true,
+        error: _ => this.connecting.set(true),
+        complete: () => this.connecting.set(true),
       });
   }
 
@@ -98,26 +96,26 @@ export class AppComponent implements OnInit {
   }
 
   playCard(card: number) {
-    this.synchronizing = true;
+    this.synchronizing.set(true);
     this.api.submitCard(this.roomId, card)
-      .subscribe(() => this.synchronizing = false);
+      .subscribe(() => this.synchronizing.set(false));
   }
 
   revealConceal() {
-    this.synchronizing = true;
+    this.synchronizing.set(true);
     if (this.state.revealed) {
       this.api.conceal(this.roomId!!)
-        .subscribe(() => this.synchronizing = false);
+        .subscribe(() => this.synchronizing.set(false));
     } else {
       this.api.reveal(this.roomId!!)
-        .subscribe(() => this.synchronizing = false);
+        .subscribe(() => this.synchronizing.set(false));
     }
   }
 
   reset() {
-    this.synchronizing = true;
+    this.synchronizing.set(true);
     this.api.reset(this.roomId)
-      .subscribe(() => this.synchronizing = false);
+      .subscribe(() => this.synchronizing.set(false));
   }
 
   join() {
