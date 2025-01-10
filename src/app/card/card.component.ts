@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, input} from '@angular/core';
 
 @Component({
   selector: 'app-card',
@@ -8,10 +8,9 @@ import {Component, Input} from '@angular/core';
   styleUrl: './card.component.scss'
 })
 export class CardComponent {
-  @Input() value: number = 0;
-  @Input() flipped: boolean = false;
-  @Input() disabled: boolean = false;
-  @Input() transform: string = '';
+  value = input(0);
+  flipped = input(false);
+  disabled = input(false);
 
   getSymbol = (value: number) => {
     switch(value) {
