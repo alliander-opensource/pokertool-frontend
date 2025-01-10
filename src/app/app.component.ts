@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {HandComponent} from "./hand/hand.component";
 import {ApiService} from "./api.service";
@@ -17,6 +17,9 @@ import {CardComponent} from "./card/card.component";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+
+  spectating = signal<boolean>(false);
+
   state: State = {
     playedCards: [],
     playedBy: [],
@@ -115,6 +118,16 @@ export class AppComponent implements OnInit {
     this.synchronizing = true;
     this.api.reset(this.roomId)
       .subscribe(() => this.synchronizing = false);
+  }
+
+  join() {
+    this.api.submitCard(this.roomId)
+      .subscribe(() => this.spectating.set(false))
+  }
+
+  spectate() {
+    this.api.deleteCard(this.roomId)
+      .subscribe(() => this.spectating.set(true))
   }
 
   protected readonly Array = Array;

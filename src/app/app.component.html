@@ -14,18 +14,28 @@
       }
     </div>
 
-    @if (state.host) {
-      <div class="button-bar">
+
+    <div class="button-bar">
+      @if (state.host) {
         <app-button (onClick)="revealConceal()" [disabled]="synchronizing || connecting">
           @if (state.revealed) { Hide } @else { Reveal }
         </app-button>
         <app-button (onClick)="reset()" [disabled]="synchronizing || connecting">
           Reset
         </app-button>
-      </div>
-    }
+      }
+      @if(spectating()) {
+      <app-button (onClick)="join()" [disabled]="synchronizing || connecting">
+        Join
+      </app-button>
+      } @else {
+      <app-button (onClick)="spectate()" [disabled]="synchronizing || connecting">
+        Spectate
+      </app-button>
+      }
+    </div>
 
-    <div class="hand" [class.hidden]="state.revealed || connecting">
+    <div class="hand" [class.hidden]="state.revealed || connecting || spectating()">
       <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing || state.revealed || connecting" [hidden]="state.revealed || connecting"/>
     </div>
   }

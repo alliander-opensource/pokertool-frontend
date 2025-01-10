@@ -37,6 +37,11 @@ export class ApiService {
     return this.http.post(`${environment.backendUrl}/rooms/${roomId}/users/${userId}`, card == undefined ? null : `${card}`, {responseType: 'text'});
   }
 
+  public deleteCard(roomId: string): Observable<void> {
+    let userId = this.userService.getUser();
+    return this.http.delete<void>(`${environment.backendUrl}/rooms/${roomId}/users/${userId}`);
+  }
+
   public reset(roomId: string): Observable<string> {
     return this.http.post(`${environment.backendUrl}/rooms/${roomId}/reset`, '', {responseType: 'text'});
   }
