@@ -1,32 +1,42 @@
 <main>
-  @if (connecting) {
+  @if (connecting()) {
     <div class="center">
       <app-throbber/>
     </div>
   } @else {
     <div class="slots">
-      @for (_ of Array(state.numPlayers); track $index) {
+      @for (card of cards(); track card.userId) {
         <div class="slot">
-          @if ($index < state.playedCards.length) {
-            <app-card [value]="state.playedCards[$index]" [flipped]="!(state.revealed || state.playedBy[$index] == userService.getUser())" />
+          @if(card.value != null) {
+            <app-card [value]="card.value" [flipped]="!(revealed() || card.userId == userService.getUser())" />
           }
         </div>
       }
     </div>
 
-    @if (state.host) {
-      <div class="button-bar">
-        <app-button (onClick)="revealConceal()" [disabled]="synchronizing || connecting">
-          @if (state.revealed) { Hide } @else { Reveal }
+
+    <div class="button-bar">
+      @if (host()) {
+        <app-button (onClick)="revealConceal()" [disabled]="synchronizing() || connecting()">
+          @if (revealed()) { Hide } @else { Reveal }
         </app-button>
-        <app-button (onClick)="reset()" [disabled]="synchronizing || connecting">
+        <app-button (onClick)="reset()" [disabled]="synchronizing() || connecting()">
           Reset
         </app-button>
-      </div>
-    }
+      }
+      @if(spectating()) {
+      <app-button (onClick)="join()" [disabled]="synchronizing() || connecting()">
+        Join
+      </app-button>
+      } @else {
+      <app-button (onClick)="spectate()" [disabled]="synchronizing() || connecting()">
+        Spectate
+      </app-button>
+      }
+    </div>
 
-    <div class="hand" [class.hidden]="state.revealed || connecting">
-      <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing || state.revealed || connecting" [hidden]="state.revealed || connecting"/>
+    <div class="hand" [class.hidden]="revealed() || connecting() || spectating()">
+      <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing() || revealed() || connecting()" [hidden]="revealed() || connecting()"/>
     </div>
   }
 </main>

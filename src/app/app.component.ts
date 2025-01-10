@@ -1,13 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {HandComponent} from "./hand/hand.component";
 import {ApiService} from "./api.service";
-import {State} from "./state";
+import {CardState} from "./state";
 import {debounceTime} from "rxjs";
 import {UserService} from "./user.service";
 import {ThrobberComponent} from "./throbber/throbber.component";
 import {ButtonComponent} from "./button/button.component";
 import {CardComponent} from "./card/card.component";
+import {User} from "./user";
 
 @Component({
   selector: 'app-root',
@@ -17,18 +18,14 @@ import {CardComponent} from "./card/card.component";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  state: State = {
-    playedCards: [],
-    playedBy: [],
-    numPlayers: 0,
-    host: false,
-    revealed: false,
-  };
-
+  cards = signal<CardState[]>([]);
+  host = signal(false);
+  revealed = signal(false);
+  spectating = signal(false);
   /// Indicates that the client sent a state-altering request to the server and is currently waiting for the state to update.
-  synchronizing = false;
+  synchronizing = signal(false);
   /// Indicates that the client hasn't received state from the server yet.
-  connecting = true;
+  connecting = signal(true);
 
   roomId!: string;
 
@@ -69,53 +66,58 @@ export class AppComponent implements OnInit {
   }
 
   startUpdateCycle() {
-    this.api.getRoom(this.roomId!!)
+    this.api.getRoom(this.roomId!!, this.userService.getUser())
       .subscribe({
         next:
           room => {
-            // @ts-ignore
-            this.state.playedCards = room.users.map(user => this.responseToCard(user.card)).filter(value => value !== null);
-            this.state.playedBy = room.users.map(user => user.userId);
-            this.state.numPlayers = room.users.length;
-            this.state.host = room.hostUserId === this.userService.getUser();
-            this.state.revealed = room.revealed;
-            this.connecting = false;
+            this.cards.set(room.users.map(user => this.responseToCard(user)))
+            this.host.set(room.hostUserId === this.userService.getUser())
+            this.revealed.set(room.revealed)
+            this.connecting.set(false)
           },
-        error: _ => this.connecting = true,
-        complete: () => this.connecting = true,
+        error: _ => this.connecting.set(true),
+        complete: () => this.connecting.set(true),
       });
   }
 
-  responseToCard(card: string): number | null {
-    if (card === '') {
-      return null;
+  responseToCard(user: User): CardState {
+    if (user.card === '') {
+      return {userId: user.userId, value: null};
     } else {
-      return +card;
+      return {userId: user.userId, value: +user.card};
     }
   }
 
   playCard(card: number) {
-    this.synchronizing = true;
+    this.synchronizing.set(true);
     this.api.submitCard(this.roomId, card)
-      .subscribe(() => this.synchronizing = false);
+      .subscribe(() => this.synchronizing.set(false));
   }
 
   revealConceal() {
-    this.synchronizing = true;
-    if (this.state.revealed) {
+    this.synchronizing.set(true);
+    if (this.revealed()) {
       this.api.conceal(this.roomId!!)
-        .subscribe(() => this.synchronizing = false);
+        .subscribe(() => this.synchronizing.set(false));
     } else {
       this.api.reveal(this.roomId!!)
-        .subscribe(() => this.synchronizing = false);
+        .subscribe(() => this.synchronizing.set(false));
     }
   }
 
   reset() {
-    this.synchronizing = true;
+    this.synchronizing.set(true);
     this.api.reset(this.roomId)
-      .subscribe(() => this.synchronizing = false);
+      .subscribe(() => this.synchronizing.set(false));
   }
 
-  protected readonly Array = Array;
+  join() {
+    this.api.submitCard(this.roomId)
+      .subscribe(() => this.spectating.set(false))
+  }
+
+  spectate() {
+    this.api.deleteCard(this.roomId)
+      .subscribe(() => this.spectating.set(true))
+  }
 }
