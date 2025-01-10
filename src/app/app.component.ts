@@ -46,7 +46,16 @@ export class AppComponent implements OnInit {
           this.roomId = roomId;
           console.log(`joining room ${this.roomId}`);
           return this.api.submitCard(this.roomId)
-            .subscribe({next: _ => this.startUpdateCycle()});
+            .subscribe({
+              next: _ => this.startUpdateCycle(),
+              error: err => {
+                // If the room was not found go to start page to create a new one
+                if (err.status == 404) {
+                  console.warn(`room was not found: ${this.roomId}`);
+                  this.router.navigate(['/']);
+                }
+              }
+            });
         } else {
           console.log('not in a room, creating one');
           return this.api.createRoom()
