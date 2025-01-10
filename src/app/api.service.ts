@@ -34,7 +34,7 @@ export class ApiService {
 
   public submitCard(roomId: string, card?: number): Observable<string> {
     let userId = this.userService.getUser();
-    return this.http.post(`${environment.backendUrl}/rooms/${roomId}/users/${userId}`, card ? `${card}` : null, {responseType: 'text'});
+    return this.http.post(`${environment.backendUrl}/rooms/${roomId}/users/${userId}`, card == undefined ? null : `${card}`, {responseType: 'text'});
   }
 
   public reset(roomId: string): Observable<string> {
