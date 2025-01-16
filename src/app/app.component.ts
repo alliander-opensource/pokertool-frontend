@@ -120,4 +120,8 @@ export class AppComponent implements OnInit {
     this.api.deleteCard(this.roomId)
       .subscribe(() => this.spectating.set(true))
   }
+
+  share() {
+    navigator.clipboard.writeText(window.location.href);
+  }
 }
