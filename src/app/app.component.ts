@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
   synchronizing = signal(false);
   /// Indicates that the client hasn't received state from the server yet.
   connecting = signal(true);
-
+  unknownRoom = signal(false);
   roomId!: string;
 
   constructor(protected userService: UserService,
@@ -39,34 +39,31 @@ export class AppComponent implements OnInit {
     this.route.queryParamMap.pipe(debounceTime(100)).subscribe(
       params => {
         const roomId = params.get('room');
-        if (roomId !== null) {
-          this.roomId = roomId;
-          console.log(`joining room ${this.roomId}`);
-          return this.api.submitCard(this.roomId)
-            .subscribe({
-              next: _ => this.startUpdateCycle(),
-              error: err => {
-                // If the room was not found go to start page to create a new one
-                if (err.status == 404) {
-                  console.warn(`room was not found: ${this.roomId}`);
-                  this.router.navigate(['/']);
-                }
-              }
-            });
-        } else {
-          console.log('not in a room, creating one');
-          return this.api.createRoom()
-            .subscribe(roomId => {
-              console.log('redirecting to room');
-              this.router.navigate(['/'], {queryParams: {room: roomId}}).then(r => console.log(r));
-            });
+        if (roomId === null) {
+          this.unknownRoom.set(true)
+          this.connecting.set(false)
+          return;
         }
+
+        this.roomId = roomId;
+        console.log(`joining room ${this.roomId}`);
+        this.api.getRoom(this.roomId).subscribe({
+          next: _ => {
+            this.api.submitCard(this.roomId).subscribe()
+            this.startUpdateCycle()
+          },
+          error: err => {
+            if (err.status == 404) {
+              this.router.navigate(['/']).then();
+            }
+          }
+        })
       }
     );
   }
 
   startUpdateCycle() {
-    this.api.getRoom(this.roomId!!, this.userService.getUser())
+    this.api.openRoomSocket(this.roomId!!, this.userService.getUser())
       .subscribe({
         next:
           room => {
@@ -121,7 +118,18 @@ export class AppComponent implements OnInit {
       .subscribe(() => this.spectating.set(true))
   }
 
+  createRoom() {
+    this.connecting.set(true)
+    console.log('creating room');
+    return this.api.createRoom()
+      .subscribe(roomId => {
+        this.unknownRoom.set(false);
+        console.log('redirecting to room');
+        this.router.navigate(['/'], {queryParams: {room: roomId}}).then();
+      });
+  }
+
   share() {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(window.location.href).then();
   }
 }

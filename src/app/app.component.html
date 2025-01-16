@@ -3,12 +3,18 @@
     <div class="center">
       <app-throbber/>
     </div>
+  } @else if (unknownRoom()) {
+    <div class="center">
+      <app-button (onClick)="createRoom()">
+        Create new room
+      </app-button>
+    </div>
   } @else {
     <div class="slots">
       @for (card of cards(); track card.userId) {
         <div class="slot">
-          @if(card.value != null) {
-            <app-card [value]="card.value" [flipped]="!(revealed() || card.userId == userService.getUser())" />
+          @if (card.value != null) {
+            <app-card [value]="card.value" [flipped]="!(revealed() || card.userId == userService.getUser())"/>
           }
         </div>
       }
@@ -18,20 +24,24 @@
     <div class="button-bar">
       @if (host()) {
         <app-button (onClick)="revealConceal()" [disabled]="synchronizing() || connecting()">
-          @if (revealed()) { Hide } @else { Reveal }
+          @if (revealed()) {
+            Hide
+          } @else {
+            Reveal
+          }
         </app-button>
         <app-button (onClick)="reset()" [disabled]="synchronizing() || connecting()">
           Reset
         </app-button>
       }
-      @if(spectating()) {
-      <app-button (onClick)="join()" [disabled]="synchronizing() || connecting()">
-        Join
-      </app-button>
+      @if (spectating()) {
+        <app-button (onClick)="join()" [disabled]="synchronizing() || connecting()">
+          Join
+        </app-button>
       } @else {
-      <app-button (onClick)="spectate()" [disabled]="synchronizing() || connecting()">
-        Spectate
-      </app-button>
+        <app-button (onClick)="spectate()" [disabled]="synchronizing() || connecting()">
+          Spectate
+        </app-button>
       }
       <app-button (onClick)="share()">
         Copy link
@@ -39,8 +49,10 @@
     </div>
 
     <div class="hand" [class.hidden]="revealed() || connecting() || spectating()">
-      <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing() || revealed() || connecting()" [hidden]="revealed() || connecting()"/>
+      <app-hand (cardChange)="playCard($event)" [disabled]="synchronizing() || revealed() || connecting()"
+                [hidden]="revealed() || connecting()"/>
     </div>
+
   }
 </main>
 
