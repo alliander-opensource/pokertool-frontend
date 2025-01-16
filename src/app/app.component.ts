@@ -128,8 +128,4 @@ export class AppComponent implements OnInit {
         this.router.navigate(['/'], {queryParams: {room: roomId}}).then();
       });
   }
-
-  share() {
-    navigator.clipboard.writeText(window.location.href).then();
-  }
 }
