@@ -52,11 +52,7 @@ export class AppComponent implements OnInit {
             this.api.submitCard(this.roomId).subscribe()
             this.startUpdateCycle()
           },
-          error: err => {
-            if (err.status == 404) {
-              this.router.navigate(['/']).then();
-            }
-          }
+          error: _ => this.router.navigate(['/']).then()
         })
       }
     );
